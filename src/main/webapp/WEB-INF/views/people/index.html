@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>First page with all Users</title>
+</head>
+<body>
+<form method="get" action="/people/new">
+  <input type="submit" value="Add Person">
+</form>
+<hr>
+<table border="3" align="2">
+  <tr>
+    <th>id</th>
+    <th>Username</th>
+    <th>Password</th>
+  </tr>
+  <div th:each="person : ${people}">
+    <tr>
+      <th><a th:href="@{/people/{id}(id = ${person.getId()})}" th:text="${person.getId()}">id</a></th>
+      <th><a th:text="${person.getUsername()}">username</a></th>
+      <th><a th:text="${person.getPassword()}">password</a></th>
+    </tr>
+  </div>
+</table>
+</body>
+</html>
