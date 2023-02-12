@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Articles page</title>
+</head>
+<body>
+<form method="get" action="/article/new">
+    <input type="submit" value="Add new Article">
+</form>
+<hr>
+<table border="3" align="2">
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>content</th>
+    </tr>
+    <div th:each="article : ${articlesList}">
+        <tr>
+            <th><a th:href="@{/article/{id}(id = ${article.getId()})}" th:text="${article.getId()}">id</a></th>
+            <th><a th:text="${article.getTitle()}">Title</a></th>
+            <th><a th:text="${article.getContent()}">Content</a></th>
+        </tr>
+    </div>
+</table>
+<hr>
+<a href="/">click here to go back to first page</a>
+</body>
+</html>

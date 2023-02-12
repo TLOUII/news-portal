@@ -1,10 +1,14 @@
 package com.meiliev.configuration;
 
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import java.util.EnumSet;
 
 public class LongNameClassIExtends extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -36,7 +40,13 @@ public class LongNameClassIExtends extends AbstractAnnotationConfigDispatcherSer
     }
 
     public void registerCharacterEncodingFilter (ServletContext servletContext) {
+        EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
 
+        FilterRegistration.Dynamic characterEncoding = servletContext.addFilter("characterEncoding",characterEncodingFilter);
+        characterEncoding.addMappingForUrlPatterns(dispatcherTypes,true,"/*");
     }
 
 }

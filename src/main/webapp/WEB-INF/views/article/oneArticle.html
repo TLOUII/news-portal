@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>page with one Article</title>
+</head>
+<body>
+<table border="3" align="2">
+  <tr>
+    <td>id:</td>
+    <td><span th:text="${ necessaryTitle.getId()}">id</span></td>
+  </tr>
+  <tr>
+    <td>title: </td>
+    <td><span th:text="${necessaryTitle.getTitle()}">title</span></td>
+  </tr>
+  <tr>
+    <td>content:</td>
+    <td><span th:text="${necessaryTitle.getContent()}">content</span></td>
+  </tr>
+</table>
+
+<a th:href="@{/article/{id}/edit(id=${necessaryTitle.getId()})}">Edit</a>
+
+<form th:method="DELETE" th:action="@{/article/{id}(id=${necessaryTitle.getId()})}">
+  <input type="submit" value="Delete"/>
+</form>
+</body>
+</html>

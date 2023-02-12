@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>page to create new article</title>
+</head>
+<body>
+<form
+        th:method="POST" th:action="@{/article}" th:object="${article}">
+    <div>
+        <label for="title">Enter Title: </label>
+        <input type="text" th:field="*{title}" id="title"/>
+        <br>
+        <label for="content">Enter Content: </label>
+        <input type="text" th:field="*{content}" id="content"/>
+        <br/>
+        <input type="submit" value="Create!"/>
+    </div>
+
+</form>
+</body>
+</html>

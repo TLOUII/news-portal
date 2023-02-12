@@ -1,10 +1,16 @@
 package com.meiliev.database.entity;
 
-public class Article {
+import java.io.Serializable;
+
+
+
+public class Article implements Serializable {
+
 
     private Long id;
     private String title;
     private String content;
+
 
     public Article() {
     }

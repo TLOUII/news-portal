@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>edit page</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/article/{id}(id=${editArticle.getId()})}" th:object="${editArticle}">
+    <div>
+        <label for="title">Change title: </label>
+        <input type="text" th:field="*{title}" id="title"/>
+        <br>
+        <label for="content">Change content: </label>
+        <input type="text" th:field="*{content}" id="content"/>
+        <br/>
+        <input type="submit" value="Edit"/>
+    </div>
+</form>
+</body>
+</html>

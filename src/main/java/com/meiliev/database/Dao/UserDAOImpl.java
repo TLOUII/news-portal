@@ -1,25 +1,29 @@
-package com.meiliev.database.repository.impl;
+package com.meiliev.database.Dao;
 
 import com.meiliev.database.entity.User;
-import com.meiliev.database.repository.UserRepository;
 import com.meiliev.database.utill.ConnectionPool;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UserRepositoryImpl implements UserRepository {
+public class UserDAOImpl implements UserDAO {
 
+    private final Connection connection;
+
+    public UserDAOImpl() {
+        this.connection = ConnectionPool.getConnectionPool().getConnection();
+    }
 
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
-        try (Statement statement = ConnectionPool.getConnection().createStatement();
-             ResultSet rSet = statement.executeQuery("SELECT * FROM news_portal.users")) {
+        try (PreparedStatement prep = connection.prepareStatement("SELECT * FROM news_portal.users");
+             ResultSet rSet = prep.executeQuery()) {
             while (rSet.next()) {
                 long id = rSet.getLong(1);
                 String username = rSet.getString(2);
@@ -27,14 +31,14 @@ public class UserRepositoryImpl implements UserRepository {
                 users.add(new User(id, username, password));
             }
         } catch (SQLException e) {
-            //ignored
+            throw new RuntimeException(e);
         }
         return users;
     }
 
     public User findById(Long id) {
         User user = new User();
-        try (ResultSet resultSet = ConnectionPool.getConnection().createStatement().executeQuery("SELECT * FROM news_portal.users")) {
+        try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.users").executeQuery()) {
             while (resultSet.next()) {
                 if (resultSet.getLong(1) == id) {
                     user.setId(resultSet.getLong(1));
@@ -52,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public User findByUsername(String username) {
         User user = new User();
-        try (ResultSet resultSet = ConnectionPool.getConnection().createStatement().executeQuery("SELECT * FROM news_portal.users")) {
+        try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.users").executeQuery()) {
             while (resultSet.next()) {
                 if (resultSet.getString(1).equals(username)) {
                     user.setId(resultSet.getLong(1));
@@ -68,7 +72,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public void createUser(User user) {
-        try (PreparedStatement prep = ConnectionPool.getConnection().prepareStatement("INSERT INTO news_portal.users (username,password) VALUES (?,?)")) {
+        try (PreparedStatement prep = connection.prepareStatement("INSERT INTO news_portal.users (username,password) VALUES (?,?)")) {
             prep.setString(1, user.getUsername());
             prep.setString(2, user.getPassword());
             prep.execute();
@@ -78,7 +82,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public void updatePasswordUserById(Long id, String password) {
-        try (PreparedStatement prep = ConnectionPool.getConnection().prepareStatement("UPDATE news_portal.users SET password = (?) WHERE id = (?) ")) {
+        try (PreparedStatement prep = connection.prepareStatement("UPDATE news_portal.users SET password = (?) WHERE id = (?) ")) {
             prep.setLong(2, id);
             prep.setString(1, password);
             prep.execute();
@@ -88,15 +92,26 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
     }
+
     @Override
     public void updateUsernameUserById(Long id, String username) {
-        try (PreparedStatement prep = ConnectionPool.getConnection().prepareStatement("UPDATE news_portal.users SET username = (?) WHERE id = (?) ")) {
+        try (PreparedStatement prep = connection.prepareStatement("UPDATE news_portal.users SET username = (?) WHERE id = (?) ")) {
             prep.setLong(2, id);
             prep.setString(1, username);
             prep.execute();
         } catch (SQLException e) {
             //ignored
             System.out.println("*8*");
+        }
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        try (PreparedStatement prep = connection.prepareStatement("DELETE FROM news_portal.users WHERE id = (?)")) {
+            prep.setLong(1, id);
+            prep.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
