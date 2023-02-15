@@ -1,4 +1,4 @@
-package com.meiliev.database.Dao;
+package com.meiliev.database.dao;
 
 import com.meiliev.database.entity.Article;
 

@@ -1,5 +1,6 @@
-package com.meiliev.database.Dao;
+package com.meiliev.database.dao.impl;
 
+import com.meiliev.database.dao.ArticleDAO;
 import com.meiliev.database.entity.Article;
 import com.meiliev.database.utill.ConnectionPool;
 import org.springframework.stereotype.Component;

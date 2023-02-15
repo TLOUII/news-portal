@@ -1,7 +1,6 @@
 package com.meiliev.rest.controller;
 
 import com.meiliev.database.entity.Article;
-import com.meiliev.database.Dao.ArticleDAOControl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

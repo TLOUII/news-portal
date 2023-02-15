@@ -1,7 +1,6 @@
 package com.meiliev.rest.controller;
 
 import com.meiliev.database.entity.User;
-import com.meiliev.database.Dao.UserDAOControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
