@@ -1,21 +1,14 @@
-package com.meiliev.database.entity;
+package com.meiliev.service.model;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "article")
+
 public class Article {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "title")
     private String title;
-    @Column(name = "content")
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "users_id")
     private User user;
 
     public Article() {

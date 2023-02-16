@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ArticleRepository {
 
-    public List<Article> returnAll();
+    public List<Article> findAll();
 
     public Article findById(Long id);
 

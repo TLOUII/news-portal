@@ -1,20 +1,15 @@
-package com.meiliev.database.entity;
+package com.meiliev.service.model;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
-@Table(name = "users")
+
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    @Column(name = "username")
     private String username;
-    @Column(name = "password")
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY)
     private Set<Article> articles;
 
     public User() {
