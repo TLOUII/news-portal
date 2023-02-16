@@ -21,10 +21,9 @@ public class UserDAOImpl implements UserDAO {
         this.connection = ConnectionPool.getConnectionPool().getConnection();
     }
 
-    public List<User> findAll() {
+    public List<User> getListUsers() {
         List<User> users = new ArrayList<>();
-        try (PreparedStatement prep = connection.prepareStatement("SELECT * FROM news_portal.users");
-             ResultSet rSet = prep.executeQuery()) {
+        try (PreparedStatement prep = connection.prepareStatement("SELECT * FROM news_portal.users"); ResultSet rSet = prep.executeQuery()) {
             while (rSet.next()) {
                 long id = rSet.getLong(1);
                 String username = rSet.getString(2);
@@ -37,7 +36,7 @@ public class UserDAOImpl implements UserDAO {
         return users;
     }
 
-    public User findById(Long id) {
+    public User findUserById(Long id) {
         User user = new User();
         try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.users").executeQuery()) {
             while (resultSet.next()) {
@@ -55,22 +54,6 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    public User findByUsername(String username) {
-        User user = new User();
-        try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.users").executeQuery()) {
-            while (resultSet.next()) {
-                if (resultSet.getString(1).equals(username)) {
-                    user.setId(resultSet.getLong(1));
-                    user.setUsername(resultSet.getString(2));
-                    user.setPassword(resultSet.getString(3));
-                }
-            }
-        } catch (SQLException e) {
-            //ignored
-            System.out.println("*");
-        }
-        return user;
-    }
 
     public void createUser(User user) {
         try (PreparedStatement prep = connection.prepareStatement("INSERT INTO news_portal.users (username,password) VALUES (?,?)")) {
@@ -82,6 +65,13 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
+    public void update(Long id, User user) {
+        updatePasswordUserById(id, user.getPassword());
+        updateUsernameUserById(id, user.getUsername());
+    }
+
+    @Override
     public void updatePasswordUserById(Long id, String password) {
         try (PreparedStatement prep = connection.prepareStatement("UPDATE news_portal.users SET password = (?) WHERE id = (?) ")) {
             prep.setLong(2, id);

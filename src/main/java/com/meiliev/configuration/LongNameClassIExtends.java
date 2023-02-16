@@ -29,24 +29,24 @@ public class LongNameClassIExtends extends AbstractAnnotationConfigDispatcherSer
     }
 
     @Override
-    public void onStartup (ServletContext aServletContext) throws ServletException {
+    public void onStartup(ServletContext aServletContext) throws ServletException {
         super.onStartup(aServletContext);
         registerHiddenFieldFilter(aServletContext);
     }
 
     private void registerHiddenFieldFilter(ServletContext aServletContext) {
-    aServletContext.addFilter("hiddenHttpMethodFilter",
-            new HiddenHttpMethodFilter()).addMappingForUrlPatterns(null,true,"/*");
+        aServletContext.addFilter("hiddenHttpMethodFilter",
+                new HiddenHttpMethodFilter()).addMappingForUrlPatterns(null, true, "/*");
     }
 
-    public void registerCharacterEncodingFilter (ServletContext servletContext) {
+    public void registerCharacterEncodingFilter(ServletContext servletContext) {
         EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
 
-        FilterRegistration.Dynamic characterEncoding = servletContext.addFilter("characterEncoding",characterEncodingFilter);
-        characterEncoding.addMappingForUrlPatterns(dispatcherTypes,true,"/*");
+        FilterRegistration.Dynamic characterEncoding = servletContext.addFilter("characterEncoding", characterEncodingFilter);
+        characterEncoding.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
     }
 
 }

@@ -1,25 +1,12 @@
 package com.meiliev.database.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
+public class Article  {
 
-
-@Entity
-@Table(name = "article")
-public class Article implements Serializable {
-
-    @Id
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
     private String content;
-
-    @ManyToOne
-    private User user;
 
     public Article() {
     }
@@ -56,9 +43,7 @@ public class Article implements Serializable {
 
     @Override
     public String toString() {
-        return "Article{" + "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' + '}';
+        return "Article{" + "id=" + id + ", title='" + title + '\'' + ", content='" + content + '\'' + '}';
     }
 
 

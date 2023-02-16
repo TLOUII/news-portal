@@ -6,16 +6,17 @@ import java.util.List;
 
 public interface ArticleDAO {
 
-    public List<Article> returnAll();
+    public List<Article> getListArticles();
 
-    public Article findById(Long id);
+    public Article findArticleById(Long id);
 
-    public Article findByTitle(String title);
+    public void createArticle(Article article);
 
-    public void createArticle(Article article); // Переделал в void
+    public void update(Long id, Article article);
 
-    public void updateArticleContent(Long id, String content); // Переделал в void
-    public void updateArticleTitle(Long id, String title); // Переделал в void
+    public void updateArticleContent(Long id, String password);
 
-    public void deleteArticle (Long id);
+    public void updateArticleTitle(Long id, String title);
+
+    public void deleteArticle(Long id);
 }

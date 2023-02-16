@@ -4,7 +4,6 @@ import com.meiliev.database.dao.ArticleDAO;
 import com.meiliev.database.entity.Article;
 import com.meiliev.database.utill.ConnectionPool;
 import org.springframework.stereotype.Component;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +22,7 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
-    public List<Article> returnAll() {
+    public List<Article> getListArticles() {
         List<Article> articlesList = new ArrayList<>();
         try (PreparedStatement prep = connection.prepareStatement("SELECT * FROM news_portal.article");
              ResultSet rSet = prep.executeQuery()) {
@@ -40,7 +39,7 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
-    public Article findById(Long id) {
+    public Article findArticleById(Long id) {
         Article article = new Article();
         try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.article").executeQuery()) {
             while (resultSet.next()) {
@@ -57,23 +56,6 @@ public class ArticleDAOImpl implements ArticleDAO {
         return article;
     }
 
-    @Override
-    public Article findByTitle(String title) {
-        Article article = new Article();
-        try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.article").executeQuery()) {
-            while (resultSet.next()) {
-                if (resultSet.getString(2).equals(title)) {
-                    article.setId(resultSet.getLong(1));
-                    article.setTitle(resultSet.getString(2));
-                    article.setContent(resultSet.getString(3));
-                }
-            }
-        } catch (SQLException e) {
-            //ignored
-            System.out.println("*");
-        }
-        return article;
-    }
 
     @Override
     public void createArticle(Article article) { // Переделал в void
@@ -85,6 +67,12 @@ public class ArticleDAOImpl implements ArticleDAO {
             //ignored
             System.out.println("*");
         }
+    }
+
+    @Override
+    public void update(Long id, Article article) {
+        updateArticleContent(id, article.getContent());
+        updateArticleTitle(id, article.getTitle());
     }
 
     @Override

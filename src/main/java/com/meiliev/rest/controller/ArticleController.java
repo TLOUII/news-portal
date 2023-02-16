@@ -1,5 +1,6 @@
 package com.meiliev.rest.controller;
 
+import com.meiliev.database.dao.ArticleDAO;
 import com.meiliev.database.entity.Article;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,43 +10,45 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/article")
 public class ArticleController {
 
-    private final ArticleDAOControl articleDAOControl;
+    private final ArticleDAO articleDAOControl;
 
-    public ArticleController(ArticleDAOControl articleDAOControl) {
+    public ArticleController(ArticleDAO articleDAOControl) {
         this.articleDAOControl = articleDAOControl;
     }
 
     @GetMapping()
     public String returnAllArticlesOnPage(Model model) {
-        model.addAttribute("articlesList", articleDAOControl.showAll());
+        model.addAttribute("articlesList", articleDAOControl.getListArticles());
         return "article/allArticles";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("necessaryTitle", articleDAOControl.showOne(id));
+        model.addAttribute("necessaryTitle", articleDAOControl.findArticleById(id));
         return "article/oneArticle";
     }
 
     @GetMapping("/new")
     public String createNewArticle(Model model) {
-        model.addAttribute("article",new Article());
+        model.addAttribute("article", new Article());
         return "article/createNewArticle";
     }
+
     @PostMapping()
     public String create(@ModelAttribute("article") Article article) {
-        articleDAOControl.saveNewArticle(article);
+        articleDAOControl.createArticle(article);
         return "redirect:/article";
     }
+
     @GetMapping("/{id}/edit")
     public String editArticle(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("editArticle", articleDAOControl.show(id));
+        model.addAttribute("editArticle", articleDAOControl.findArticleById(id));
         return "article/editArticle";
     }
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("articl") Article article, @PathVariable("id") Long id) {
-        articleDAOControl.updateArticle(id, article);
+        articleDAOControl.update(id, article);
         return "redirect:/article";
     }
 

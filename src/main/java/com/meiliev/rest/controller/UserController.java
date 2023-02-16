@@ -1,5 +1,6 @@
 package com.meiliev.rest.controller;
 
+import com.meiliev.database.dao.UserDAO;
 import com.meiliev.database.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,22 +11,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserDAOControl userController;
+    private final UserDAO userController;
 
     @Autowired
-    public UserController(UserDAOControl userController) {
+    public UserController(UserDAO userController) {
         this.userController = userController;
     }
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("people", userController.index());
+        model.addAttribute("people", userController.getListUsers());
         return "user/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("person", userController.show(id));
+        model.addAttribute("person", userController.findUserById(id));
         return "user/show";
     }
 
@@ -36,25 +37,25 @@ public class UserController {
 
     @PostMapping()
     public String create(@ModelAttribute("person") User person) {
-        userController.save(person);
+        userController.createUser(person);
         return "redirect:/user";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("person", userController.show(id));
+        model.addAttribute("person", userController.findUserById(id));
         return "user/edit";
     }
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") User user, @PathVariable("id") Long id) {
-        userController.updatePass(id, user);
+        userController.update(id, user);
         return "redirect:/user";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id) {
-        userController.delete(id);
+        userController.deleteUser(id);
         return "redirect:/user";
     }
 }

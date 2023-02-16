@@ -23,13 +23,13 @@ public class SpringConfig implements WebMvcConfigurer {
     private final Environment environment;
 
     @Autowired
-    public SpringConfig (ApplicationContext applicationContext, Environment environment){
+    public SpringConfig(ApplicationContext applicationContext, Environment environment) {
         this.applicationContext = applicationContext;
         this.environment = environment;
     }
 
     @Bean
-    public SpringResourceTemplateResolver templateResolver () {
+    public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("WEB-INF/views/");
@@ -38,7 +38,7 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public SpringTemplateEngine springTemplateEngine () {
+    public SpringTemplateEngine springTemplateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
@@ -46,7 +46,7 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void configureViewResolvers (ViewResolverRegistry registry) {
+    public void configureViewResolvers(ViewResolverRegistry registry) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(springTemplateEngine());
         registry.viewResolver(resolver);

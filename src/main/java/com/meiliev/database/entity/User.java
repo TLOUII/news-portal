@@ -1,33 +1,13 @@
 package com.meiliev.database.entity;
 
 
+public class User {
 
-
-
-import javax.persistence.*;
-
-import java.io.Serializable;
-import java.util.Set;
-
-
-@Entity
-@Table(name = "users")
-public class User implements Serializable {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id")
     private String username;
 
-
-    @Column(name = "id")
     private String password;
-
-    @OneToMany(mappedBy = "article")
-    private Set<Article> articles;
 
     public User() {
     }
@@ -60,14 +40,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
     }
 
     @Override
