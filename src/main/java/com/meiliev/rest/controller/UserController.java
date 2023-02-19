@@ -20,13 +20,13 @@ public class UserController {
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("people", userController.getListUsers());
+        model.addAttribute("people", userController.findAll());
         return "user/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("person", userController.findUserById(id));
+        model.addAttribute("person", userController.findById(id));
         return "user/show";
     }
 
@@ -37,13 +37,13 @@ public class UserController {
 
     @PostMapping()
     public String create(@ModelAttribute("person") User person) {
-        userController.createUser(person);
+        userController.create(person);
         return "redirect:/user";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("person", userController.findUserById(id));
+        model.addAttribute("person", userController.findById(id));
         return "user/edit";
     }
 
@@ -55,7 +55,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id) {
-        userController.deleteUser(id);
+        userController.delete(id);
         return "redirect:/user";
     }
 }

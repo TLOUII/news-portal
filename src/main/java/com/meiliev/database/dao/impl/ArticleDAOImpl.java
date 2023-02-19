@@ -4,15 +4,18 @@ import com.meiliev.database.dao.ArticleDAO;
 import com.meiliev.database.entity.Article;
 import com.meiliev.database.utill.ConnectionPool;
 import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Component
 public class ArticleDAOImpl implements ArticleDAO {
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     private final Connection connection;
 
@@ -22,90 +25,86 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
-    public List<Article> getListArticles() {
+    public List<Article> findAll() {
         List<Article> articlesList = new ArrayList<>();
-        try (PreparedStatement prep = connection.prepareStatement("SELECT * FROM news_portal.article");
-             ResultSet rSet = prep.executeQuery()) {
-            while (rSet.next()) {
-                long id = rSet.getLong(1);
-                String title = rSet.getString(2);
-                String content = rSet.getString(3);
-                articlesList.add(new Article(id, title, content));
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM news_portal.article");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                articlesList.add(new Article(resultSet.getLong(resultSet.findColumn("id")),
+                        resultSet.getString(resultSet.findColumn("title")),
+                        resultSet.getString(resultSet.findColumn("content"))));
             }
         } catch (SQLException e) {
-            //ignored
+            logger.info("Error in method - findAll");
         }
         return articlesList;
     }
 
     @Override
-    public Article findArticleById(Long id) {
+    public Article findById(Long id) {
         Article article = new Article();
-        try (ResultSet resultSet = connection.prepareStatement("SELECT * FROM news_portal.article").executeQuery()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM news_portal.article WHERE id = ?")) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                if (resultSet.getLong(1) == id) {
-                    article.setId(resultSet.getLong(1));
-                    article.setTitle(resultSet.getString(2));
-                    article.setContent(resultSet.getString(3));
-                }
+                article.setId(resultSet.getLong(1));
+                article.setTitle(resultSet.getString(2));
+                article.setContent(resultSet.getString(3));
             }
+            resultSet.close();
         } catch (SQLException e) {
-            //ignored
-            System.out.println("*");
+            logger.info("Error in method - findById");
         }
         return article;
     }
 
 
     @Override
-    public void createArticle(Article article) { // Переделал в void
+    public void create(Article article) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO news_portal.article (title,content) VALUES (?,?)")) {
             preparedStatement.setString(1, article.getTitle());
             preparedStatement.setString(2, article.getContent());
             preparedStatement.execute();
         } catch (SQLException e) {
-            //ignored
-            System.out.println("*");
+            logger.info("Error in method - create");
         }
     }
 
-    @Override
+
     public void update(Long id, Article article) {
-        updateArticleContent(id, article.getContent());
-        updateArticleTitle(id, article.getTitle());
+        updateContent(id, article.getContent());
+        updateTitle(id, article.getTitle());
     }
 
-    @Override
-    public void updateArticleContent(Long id, String content) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE news_portal.article set content = (?) where id=(?);")) {
+
+    private void updateContent(Long id, String content) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE news_portal.article set content = ? where id = ?;")) {
             preparedStatement.setLong(2, id);
             preparedStatement.setString(1, content);
             preparedStatement.execute();
         } catch (SQLException e) {
-            //ignored
-            System.out.println("*");
+            logger.info("Error in method - updateContent");
         }
     }
 
-    @Override
-    public void updateArticleTitle(Long id, String title) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE news_portal.article set title = (?) where id=(?);")) {
+
+    private void updateTitle(Long id, String title) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE news_portal.article set title = ? where id = ?;")) {
             preparedStatement.setLong(2, id);
             preparedStatement.setString(1, title);
             preparedStatement.execute();
         } catch (SQLException e) {
-            //ignored
-            System.out.println("*");
+            logger.info("Error in method - updateTitle");
         }
     }
 
     @Override
-    public void deleteArticle(Long id) {
-        try (PreparedStatement prep = connection.prepareStatement("DELETE FROM news_portal.article WHERE id = (?)")) {
-            prep.setLong(1, id);
-            prep.execute();
+    public void delete(Long id) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM news_portal.article WHERE id = ?")) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.info("Error in method - delete");
         }
     }
 }

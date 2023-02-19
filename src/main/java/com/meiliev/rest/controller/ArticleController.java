@@ -18,13 +18,13 @@ public class ArticleController {
 
     @GetMapping()
     public String returnAllArticlesOnPage(Model model) {
-        model.addAttribute("articlesList", articleDAOControl.getListArticles());
+        model.addAttribute("articlesList", articleDAOControl.findAll());
         return "article/allArticles";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("necessaryTitle", articleDAOControl.findArticleById(id));
+        model.addAttribute("necessaryTitle", articleDAOControl.findById(id));
         return "article/oneArticle";
     }
 
@@ -36,13 +36,13 @@ public class ArticleController {
 
     @PostMapping()
     public String create(@ModelAttribute("article") Article article) {
-        articleDAOControl.createArticle(article);
+        articleDAOControl.create(article);
         return "redirect:/article";
     }
 
     @GetMapping("/{id}/edit")
     public String editArticle(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("editArticle", articleDAOControl.findArticleById(id));
+        model.addAttribute("editArticle", articleDAOControl.findById(id));
         return "article/editArticle";
     }
 
@@ -54,7 +54,7 @@ public class ArticleController {
 
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable("id") Long id) {
-        articleDAOControl.deleteArticle(id);
+        articleDAOControl.delete(id);
         return "redirect:/article";
     }
 }
