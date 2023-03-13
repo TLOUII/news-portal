@@ -10,10 +10,8 @@ public interface UserRepository {
 
     public User findById(Long id);
 
-    public User findByUsername(String username);
-
     public void createUser(User user); // переделал в void
 
-    public void updatePasswordUserById(Long id, String pswd); // переделал в void И ИЗМЕНИЛ ПАРАМЕТРЫ АРГУМЕНТА (long id,User user) -> (Long id, String password)
-    public void updateUsernameUserById(Long id, String username); //Добавил новы метод для именения имени
+    public void updateUserById(Long id, User user); // переделал в void И ИЗМЕНИЛ ПАРАМЕТРЫ АРГУМЕНТА (long id,User user) -> (Long id, String password)
+    public void delete(Long id);
 }

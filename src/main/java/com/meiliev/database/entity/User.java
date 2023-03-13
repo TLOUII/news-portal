@@ -14,7 +14,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")
     private Set<Article> articles;
 
     public User() {
@@ -25,6 +26,12 @@ public class User {
         this.username = username;
         this.password = password;
         this.articles = articles;
+    }
+
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
     }
 
     public Long getId() {
@@ -61,8 +68,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id +
+        return "User{" +
+                "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' + '}';
+                ", password='" + password + '\'' +
+                ", articles=" + articles +
+                '}';
     }
 }

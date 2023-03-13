@@ -1,6 +1,7 @@
 package com.meiliev.service.model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.Set;
 
 
@@ -20,6 +21,12 @@ public class User {
         this.username = username;
         this.password = password;
         this.articles = articles;
+    }
+
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
     }
 
     public Long getId() {
@@ -55,9 +62,13 @@ public class User {
     }
 
     @Override
+    @JsonDeserialize
     public String toString() {
-        return "User{" + "id=" + id +
+        return "User{" +
+                "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' + '}';
+                ", password='" + password + '\'' +
+                ", articles=" + articles +
+                '}';
     }
 }

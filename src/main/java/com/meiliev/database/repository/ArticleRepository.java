@@ -10,9 +10,9 @@ public interface ArticleRepository {
 
     public Article findById(Long id);
 
-    public Article findByTitle(String title);
-
     public void createArticle(Article article); // Переделал в void
 
-    public void updateArticle(Long id, String content); // Переделал в void
+    public void updateArticle(Long id, Article article); // Переделал в void
+
+    public void delete(Long id);
 }

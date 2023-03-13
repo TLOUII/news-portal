@@ -1,5 +1,8 @@
 package com.meiliev.database.entity;
 
+
+
+
 import javax.persistence.*;
 
 @Entity
@@ -26,6 +29,12 @@ public class Article {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    public Article(Long id, String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
     }
 
     public Long getId() {
@@ -69,4 +78,5 @@ public class Article {
                 ", user=" + user +
                 '}';
     }
+
 }

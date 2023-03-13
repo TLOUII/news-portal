@@ -1,7 +1,7 @@
 package com.meiliev.database.repository.impl;
 
-import com.meiliev.database.entity.Article;
-import com.meiliev.database.repository.ArticleRepository;
+import com.meiliev.database.entity.User;
+import com.meiliev.database.repository.UserRepository;
 import com.meiliev.database.utill.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,20 +16,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-public class ArticleRepositoryImpl implements ArticleRepository {
+public class UserRepositoryImpl implements UserRepository {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
+
     private final SessionFactory sessionFactory;
 
-    public ArticleRepositoryImpl(SessionFactory sessionFactory) {
+    public UserRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public List<Article> findAll() {
+    public List<User> findAll() {
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
-            Root<Article> root = criteriaQuery.from(Article.class);
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
             criteriaQuery.select(root);
             Query query = session.createQuery(criteriaQuery);
             return query.getResultList();
@@ -37,68 +38,78 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     }
 
     @Override
-    public Article findById(Long id) {
-        Article article = new Article();
+    public User findById(Long id) {
+        User user = new User();
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            if (session.get(Article.class, id) != null) {
-                return session.get(Article.class, id);
+            if (session.get(User.class, id) != null) {
+                return session.get(User.class, id);
             } else
-                logger.log(Level.SEVERE, "no such title for current id");
+                logger.info("no such title for current id");
         }
-        return article;
+        return user;
     }
 
     @Override
-    public void createArticle(Article article) {
+    public void createUser(User user) {
+
         try (Session session = sessionFactory.openSession()) {
-            if (article == null) {
-                logger.log(Level.WARNING,
-                        "Article cannot be empty, created cannot be finished successfully");
+            if (user == null) {
+                logger.log(Level.WARNING, "User cannot be empty");
             } else {
                 session.beginTransaction();
-                session.save(article);
+                session.save(user);
                 session.getTransaction().commit();
             }
         } catch (NullPointerException e) {
-            logger.log(Level.SEVERE, "Source with Article is empty");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "User empty");
         }
     }
 
     @Override
-    public void updateArticle(Long id, Article article) {
+    public void updateUserById(Long id, User user) {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            if (session.get(Article.class, id) == null) {
-                logger.log(Level.WARNING, "no such title for current id");
+            if (id == 0) {
+                logger.log(Level.WARNING, "id == 0, cannot be applied");
+            }
+            if (session.get(User.class, id) == null) {
+                logger.log(Level.WARNING, "id - cannot be empty");
             } else {
-                Article newArticle = session.get(Article.class, id);
-                newArticle.setContent(newArticle.getContent());
-                newArticle.setTitle(newArticle.getTitle());
+                session.beginTransaction();
+                User newUser = session.get(User.class, id);
+                newUser.setUsername(newUser.getUsername());
+                newUser.setPassword(newUser.getPassword());
+                session.save(newUser);
                 session.getTransaction().commit();
             }
         } catch (NullPointerException e) {
-            logger.log(Level.SEVERE, "Source with Article is empty");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "id == 0 or null");
         }
     }
+
+
 
     @Override
     public void delete(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            if (session.get(Article.class, id) == null) {
+            if (session.get(User.class, id) == null) {
                 logger.log(Level.WARNING,
                         "no such title for current id, maybe it's id is not found");
             } else {
                 session.beginTransaction();
-                Article article = session.get(Article.class, id);
-                session.delete(article);
+                User user = session.get(User.class, id);
+                session.delete(user);
                 session.getTransaction().commit();
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "id not found, or id has empty");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        User user = new User(1L, "NameUser", "UserPassword");
+        UserRepository userRepository = new UserRepositoryImpl(HibernateUtil.getSessionFactory());
+        userRepository.createUser(user);
     }
 }

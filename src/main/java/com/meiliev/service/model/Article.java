@@ -1,14 +1,12 @@
 package com.meiliev.service.model;
 
-import javax.persistence.*;
-
+import com.sun.istack.NotNull;
 
 public class Article {
 
     private Long id;
     private String title;
     private String content;
-
     private User user;
 
     public Article() {
@@ -19,6 +17,12 @@ public class Article {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    public Article(Long id, String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
     }
 
     public Long getId() {

@@ -1,5 +1,7 @@
 package com.meiliev.configuration;
 
+import com.meiliev.database.utill.HibernateUtil;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +20,6 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
 @ComponentScan("com")
 @EnableWebMvc
-@PropertySource("classpath:database.properties")
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Environment environment;
@@ -51,6 +52,11 @@ public class SpringConfig implements WebMvcConfigurer {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(springTemplateEngine());
         registry.viewResolver(resolver);
+    }
+
+    @Bean
+    public SessionFactory sessionFactory() {
+        return HibernateUtil.getSessionFactory();
     }
 }
 
